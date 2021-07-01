@@ -1,0 +1,4 @@
+{
+  "session": "http://localhost:11111/restapi/session",
+  "graphql": "http://localhost:11111/graphql/v1"
+}
