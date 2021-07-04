@@ -188,8 +188,10 @@ async function retrieveWarehouses(client:ApolloClient<any>, box:Box, test:TestID
             }
         });
         result = true;
+        box.changeTestLogs(test, JSON.stringify(res.data));
         box.changeTestResult(test, "pass", sc);
     } catch(error) {
+        box.changeTestLogs(test, JSON.stringify(error.networkError));
         box.changeTestResult(test, "fail", sc);
     }
     box.changeTestStatus(test, "completed", sc);
@@ -213,10 +215,12 @@ async function createWarehouse(client:ApolloClient<any>, box:Box, test: TestID, 
                 }
             }
         });
+        box.changeTestLogs(test, JSON.stringify(response.data));
         res.warehouse = response.data.createWarehouseMutation;
         res.success = true;
         box.changeTestResult(test, "pass", sc);
     } catch (error) {
+        box.changeTestLogs(test, JSON.stringify(error.networkError))
         box.changeTestResult(test, "fail", sc);
     }
     box.changeTestStatus(test, "completed", sc);
@@ -235,10 +239,12 @@ async function retrieveWarehouse(client:ApolloClient<any>, warehouse: any, box:B
                 uid: warehouse.uid
             }
         });
+        box.changeTestLogs(test, JSON.stringify(response.data));
         res.warehouse = response.data.warehouse;
         res.success = true;
         box.changeTestResult(test, "pass", sc);
     } catch(error) {
+        box.changeTestLogs(test, JSON.stringify(error.networkError))
         box.changeTestResult(test, "fail", sc);
     }
     box.changeTestStatus(test, "completed", sc);
@@ -280,10 +286,12 @@ async function updateWarehouse(client:ApolloClient<any>, warehouse: any, box:Box
                 }
             }
         });
+        box.changeTestLogs(test, JSON.stringify(response.data));
         res.warehouse = response.data.updateWarehouseMutation;
         res.success = true;
         box.changeTestResult(test, "pass", sc);
     } catch(error) {
+        box.changeTestLogs(test, JSON.stringify(error.networkError))
         box.changeTestResult(test, "fail", sc);
     }
     box.changeTestStatus(test, "completed", sc);
@@ -314,10 +322,12 @@ async function actionWarehouse(client:ApolloClient<any>, warehouse:any, box:Box,
                action: "VOID"
            }
         });
+        box.changeTestLogs(test, JSON.stringify(response.data));
         res.warehouse = response.data.actionWarehouseMutation;
         res.success = true;
         box.changeTestResult(test, "pass", sc);
     } catch(error) {
+        box.changeTestLogs(test, JSON.stringify(error.networkError))
         box.changeTestResult(test, "fail", sc);
     }
     box.changeTestStatus(test, "completed", sc);
@@ -336,10 +346,12 @@ async function deleteWarehouse(client:ApolloClient<any>, warehouse:any, box:Box,
                 uid: warehouse.uid
             }
         });
+        box.changeTestLogs(test, JSON.stringify(response.data));
         res.warehouse = response.data.deleteWarehouseMutation;
         res.success = true;
         box.changeTestResult(test, "pass", sc);
     } catch(error) {
+        box.changeTestLogs(test, JSON.stringify(error.networkError))
         box.changeTestResult(test, "fail", sc);
     }
     box.changeTestStatus(test, "completed", sc);

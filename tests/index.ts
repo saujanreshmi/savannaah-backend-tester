@@ -5,6 +5,7 @@ import {ApolloClient} from "@apollo/client/core";
 const url = require("../url.json");
 const session = require("./session");
 const warehouse = require("./warehouse");
+const employee = require("./employee");
 
 export async function setupTests(boxes: Box[], sc: any): Promise<{ token: string, error: boolean }> {
     try {
@@ -74,4 +75,37 @@ export function runTests(token: string, boxes: Box[], sc: any): void {
         });
     });
     //testing employee
+    employee.setup(token).then((client: ApolloClient<any>) => {
+        employee.retrieveList(client, boxes[2], boxes[2].tests[0].id, sc).then((success:boolean) => {
+            if (success) {
+                employee.create(client, boxes[2], boxes[2].tests[1].id, sc).then((res0:{employee:any, success:boolean}) => {
+                    if (res0.success) {
+                        employee.retrieve(client, res0.employee, boxes[2], boxes[2].tests[2].id, sc).then((res1:{employee:any, success:boolean}) => {
+                           if (res1.success) {
+                               employee.update(client, res0.employee, boxes[2], boxes[2].tests[3].id, sc).then((res2:{employee:any, success:boolean}) => {
+                                  if (res2.success) {
+                                      employee.action(client, res2.employee, boxes[2], boxes[2].tests[4].id, "VOID", sc).then((res3:{employee:any, success:boolean}) => {
+                                          if (res3.success) {
+                                              employee.action(client, res3.employee, boxes[2], boxes[2].tests[4].id, "RESTORE", sc).then((res4:{employee:any, success:boolean}) => {
+                                                  if (res4.success) {
+                                                      employee.action(client, res4.employee, boxes[2], boxes[2].tests[4].id, "VOID", sc).then((res5:{employee:any, success:boolean}) => {
+                                                          if (res5.success) {
+                                                              employee.delete(client, res5.employee, boxes[2], boxes[2].tests[5].id, sc).then((res6:{employee:any, success:boolean}) => {
+                                                                  boxes[2].changeStatus("completed", sc);
+                                                              })
+                                                          }
+                                                      });
+                                                  }
+                                              });
+                                          }
+                                      });
+                                  }
+                               });
+                           }
+                        });
+                    }
+                });
+            }
+        });
+    });
 }

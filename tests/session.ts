@@ -12,9 +12,11 @@ async function createSession(box:Box, test:TestID, sc:any) :Promise<{token: stri
         let response = await axios.post(url.session + "?action=create", {}, {headers: headers});
         res.token = response.data.token;
         res.success = true;
+        box.changeTestLogs(test, JSON.stringify(response.data));
         box.changeTestResult(test, "pass", sc);
     } catch (error) {
         res.success = false;
+        box.changeTestLogs(test, JSON.stringify(error.networkError))
         box.changeTestResult(test, "fail", sc);
     }
     box.changeTestStatus(test, "completed", sc);
@@ -30,8 +32,10 @@ async function updateSession(token:string, box:Box, test: TestID, sc:any) :Promi
     try {
         let response = await axios.post(url.session + "?action=update", {}, {headers: headers});
         result = true;
+        box.changeTestLogs(test, JSON.stringify(response.data));
         box.changeTestResult(test, "pass", sc);
     } catch (error) {
+        box.changeTestLogs(test, JSON.stringify(error.networkError))
         box.changeTestResult(test, "fail", sc);
     }
     box.changeTestStatus(test, "completed", sc);
@@ -47,8 +51,10 @@ async function retrieveSession(token:string, box:Box, test: TestID, sc:any) :Pro
     try {
         let response = await axios.post(url.session + "?action=retrieve", {}, {headers: headers});
         result = true;
+        box.changeTestLogs(test, JSON.stringify(response.data));
         box.changeTestResult(test, "pass", sc);
     } catch (error) {
+        box.changeTestLogs(test, JSON.stringify(error.networkError))
         box.changeTestResult(test, "fail", sc);
     }
     box.changeTestStatus(test, "completed", sc);
@@ -64,8 +70,10 @@ async function destroySession(token:string, box:Box, test: TestID, sc:any) :Prom
     try {
         let response = await axios.post(url.session + "?action=destroy", {}, {headers: headers});
         result = true;
+        box.changeTestLogs(test, JSON.stringify(response.data));
         box.changeTestResult(test, "pass", sc);
     } catch (error) {
+        box.changeTestLogs(test, JSON.stringify(error.networkError))
         box.changeTestResult(test, "fail", sc);
     }
     box.changeTestStatus(test, "completed", sc);
